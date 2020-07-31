@@ -3,10 +3,10 @@ from tethys_sdk.base import TethysAppBase, url_map_maker
 
 class Baseapp(TethysAppBase):
     """
-    Tethys app class for BASEIC APP.
+    Tethys app class for BASIC APP.
     """
 
-    name = 'BASEIC APP'
+    name = 'BASIC APP'
     index = 'baseapp:home'
     icon = 'baseapp/images/icon.gif'
     package = 'baseapp'
