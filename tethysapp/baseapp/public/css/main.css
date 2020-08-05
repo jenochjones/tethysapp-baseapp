@@ -5,3 +5,8 @@
     top: 50px;
     bottom: 50px;
 }
+
+#select-var {
+    margin-top: 10px;
+    width: 100%;
+}
