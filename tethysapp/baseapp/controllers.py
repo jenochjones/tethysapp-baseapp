@@ -78,11 +78,28 @@ def home(request):
         options=(('Precipitation Amount', 'precipitation_amount'),
                  ('Precipitation Anomaly','precipitation_anomaly')),
     )
-
+    
+    shapevariable = SelectInput(
+        display_text='Select UCSB GeoServer Features',
+        name='shapevariable',
+        multiple=False,
+        original=True,
+        options=(
+                 ('World Countries', 'global_admin0'),
+                 ('World Admin 1','global_admin1'),
+                 ('World Admin 2','global_admin2'),
+                 ('Africa Countries', 'africa_admin0'),
+                 ('Africa Admin 1','africa_admin1'),
+                 ('Africa Admin 2','africa_admin2'),
+                 ('Global Catchment Level 2/Fews 3','global_catch2_fews3'),
+                 ('Global Catchment Level 2/Fews 4','global_catch2_fews4'),
+                 ('Africa Catchment Level 2/Fews', 'africa_catch2_fews')),
+    )
 
 
     context = {
         'variables': variables,
+        'shapevariable':shapevariable,
         'save_button': save_button,
         'edit_button': edit_button,
         'remove_button': remove_button,

@@ -1,3 +1,17 @@
+/* Define list of shapefiles from UCSB GeoServer */
+const shpRegion = {'global_admin0':'global','global_admin1':'global','global_admin2':'global',
+                   'africa_admin0':'africa','africa_admin1':'africa','africa_admin2':'africa',
+                   'global_catch2_fews3':'global','global_catch2_fews4':'global','africa_catch2_fews':'africa'};
+
+
+const shpName =   {'global_admin0':'g2008_0','global_admin1':'g2008_1','global_admin2':'g2008_2',
+                   'africa_admin0':'g2008_0','africa_admin1':'g2008_1','africa_admin2':'g2008_2',
+                   'global_catch2_fews3':'global_catch_level2_fews3','global_catch2_fews4':'global_catch_level2_fews4',
+                   'africa_catch2_fews':'africa_catch_level2_fews'};
+
+
+console.log(shpRegion['global_admin0'])
+
 /* Define a list of countries to be selectable by name */
 let countrieslist = ['Afghanistan', 'Albania', 'Algeria', 'American Samoa', 'Andorra', 'Angola', 'Anguilla', 'Antarctica',
         'Antigua and Barbuda', 'Argentina', 'Armenia', 'Aruba', 'Australia', 'Austria', 'Azerbaijan', 'Bahamas',
