@@ -5,6 +5,7 @@
   <div class="header-button glyphicon-button" data-toggle="tooltip" data-placement="bottom" title="Help">
     <a data-toggle="modal" data-target="#help-modal"><span class="glyphicon glyphicon-question-sign"></span></a>
   </div>
+  
 {% endblock %}
 
 {% block app_content %}
@@ -33,12 +34,20 @@
       </div>
     </div>
   </div>
+
+  <!-- Timeseries -->
+  <div class="modal fade" id="timeseries-model" tabindex="-1" role="dialog" aria-labelledby="shp-modal-label">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="width: 50%">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" ><span aria-hidden="true">X</span></button>
+        </div>
+        <div id="point_plot" style="width: 80%; height: 80%;"></div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
 
 {% block app_actions %}
-  {% gizmo save_button %}
-  {% gizmo edit_button %}
-  {% gizmo remove_button %}
-  {% gizmo previous_button %}
-  {% gizmo next_button %}
+
 {% endblock %}
