@@ -5,3 +5,9 @@
     top: 50px;
     bottom: 50px;
 }
+
+#myshapefile {
+    width: 100%;
+    background-color: white;
+    border-color: #cccccc;
+}
