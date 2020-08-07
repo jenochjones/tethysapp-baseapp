@@ -22,12 +22,16 @@ class Baseapp(TethysAppBase):
         Add controllers
         """
         UrlMap = url_map_maker(self.root_url)
-
         url_maps = (
             UrlMap(
                 name='home',
                 url='baseapp',
                 controller='baseapp.controllers.home'
+            ),
+            UrlMap(
+                name='timeSeriesPoint',
+                url='controllers/get_point_values/',
+                controller='baseapp.controllers.getTimeSeriesPoint'
             ),
         )
 
