@@ -11,7 +11,7 @@ $('#variables').change(function () {
 
 // let user_shapefile = L.geoJSON(false);
 let user_shapefile = L.geoJSON(false, {onEachFeature: function (feature, layer) {
-    layer.bindPopup('<a class="btn btn-default" role="button" onclick="getShapeChart(' + "'GeoJSON'" + ')">Get timeseries for my GeoJSON</a>');
+    layer.bindPopup('<a class="btn btn-default" role="button" onclick="getShapeChart(' + "'GeoJSON'" + ')">Get timeseries for my feature</a>');
 }});
 
 let user_geojson = L.geoJSON(false, {onEachFeature: function (feature, layer) {

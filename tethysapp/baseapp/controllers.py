@@ -120,5 +120,34 @@ def getTimeSeriesPoint(request):
     return JsonResponse({'x': xvals, 'y': yvals})
 
 
+def getTimeSeriesBox(request):
+    '''
+    This function takes in the request for a timeseries of data within a boundign box
+    and returns a Json of x,y values that can be used for plotting.
+
+    Currently, this just returns the unweighted mean of valid (i.e. non-missing data)
+
+    '''
+    minlat = float(request.GET['min_lat'].strip('"'))
+    maxlat = float(request.GET['max_lat'].strip('"'))
+    minlon = float(request.GET['min_lon'].strip('"'))
+    maxlon = float(request.GET['max_lon'].strip('"'))
+    varName = request.GET['layer'].strip('"') # We need the variable to extract from the data file.
+    tdsUrl = request.GET['dataUrl'].strip('"')
+    # Use xarray to pull out the data. This means we also need to get the OpenDAP URL
+    # Open the dataset at tdsUrl
+    ds=xr.open_dataset(tdsUrl)
+    # N.B. The CHIRPS Latitudes are stored descending ... thus the slice must also be descending or it will not properly subset the index.
+    timeSeries=ds[varName].sel(latitude=slice(maxlat,minlat),longitude=slice(minlon,maxlon)).mean(dim=['latitude','longitude'])
+    # timeSeries is an xarray dataArray object.
+    # The values are a numpy array! It can't be serialized as needed for the JSON Response. 
+    # Convert the values to a list
+    yvals=timeSeries.values.tolist()
+    # The TDS data has times that need to be converted into an array of strings.
+    xvals=timeSeries['time'].dt.strftime('%Y-%m-%dT%H:%M:%S').values.tolist() 
+    #print(xvals)
+    #print(yvals)   
+    return JsonResponse({'x': xvals, 'y': yvals})
+
 
             

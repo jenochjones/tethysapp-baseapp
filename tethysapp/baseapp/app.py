@@ -35,6 +35,13 @@ class Baseapp(TethysAppBase):
                 url='controllers/get_point_values/',
                 controller='baseapp.controllers.getTimeSeriesPoint'
             ),
+
+            UrlMap(
+                name='timeSeriesBox',
+                url='controllers/get_box_values/',
+                controller='baseapp.controllers.getTimeSeriesBox'
+            ),
+        
         
         )
 

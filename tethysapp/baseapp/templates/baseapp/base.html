@@ -14,11 +14,6 @@
 
 {% block app_navigation_items %}
 {# url ‘baseapp:base’ as map_url #} 
-<select id="select-var">
-  <option value="precipitation_amount">precipitation_amount</option>
-  <option value="precipitation_anomaly">precipitation_anomaly</option>
-</select>
-
 <li class="title">CHIRPS Data Controls</li>
     {% gizmo select_input variables %}
 

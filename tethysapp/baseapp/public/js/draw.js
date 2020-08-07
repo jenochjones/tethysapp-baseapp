@@ -68,7 +68,7 @@ function getTimeSeriesPoint(type,layer) {
                 // clear the loading gif
                 $("#chart").html('');
                 chartdata = result
-                plotlyTimeseries(chartdata);
+                plotlyTimeseries(chartdata,'Point');
             },
         });
     }
@@ -83,29 +83,32 @@ function getTimeSeriesPoint(type,layer) {
         var min_lon = corner_1.lng;
 
         $.ajax({
-            url: 'ajax/get_box_values/',
+            url: 'controllers/get_box_values/',
             data: {
                 'max_lat': max_lat,
                 'max_lon': max_lon,
                 'min_lat': min_lat,
                 'min_lon': min_lon,
-                'filename': pathToDisplayedFile,
+                'dataUrl': tdsUrl,
                 'layer': layer_name,
             },
             dataType: 'json',
             contentType: "application/json",
             method: 'GET',
             success: function (result) {
-                draw_graph(result['data'], result['time'], result['value']);
+                // clear the loading gif
+                $("#chart").html('');
+                chartdata = result
+                plotlyTimeseries(chartdata,'Area Average');
             },
         });
     }
 }
 
-function plotlyTimeseries(data) {
+function plotlyTimeseries(data,typeOfAverage) {
     let variable = $("#variables option:selected").text();
     let layout = {
-        title: 'Timeseries of 10-Day ' + variable,  // would be great to use the nice name  ... is that what option:selected does?
+        title: typeOfAverage + ' Timeseries of 10-Day ' + variable,  // would be great to use the nice name  ... is that what option:selected does?
         xaxis: {title: 'Time'},
         yaxis: {title: 'Amount (mm)'} // we could make this dynamic by passing in the units read-in from python through the JSON Request (i.e. an additioanl element)
     };
