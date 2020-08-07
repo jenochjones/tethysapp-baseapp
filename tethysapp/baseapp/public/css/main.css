@@ -1,7 +1,14 @@
-#map {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 50px;
-    bottom: 50px;
+html, body, #app-content, #inner-app-content, #outer-container, #map {
+    margin: 0px;
+    padding: 2px;
+    height: 100%;
+}
+
+#app-navigation-items {
+    height: 100%;
+}
+
+#inner-app-content {
+    padding: 0;
+    height: 100%;
 }
