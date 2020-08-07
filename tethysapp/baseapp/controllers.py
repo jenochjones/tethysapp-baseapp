@@ -2,6 +2,10 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from tethys_sdk.permissions import login_required
 from tethys_sdk.gizmos import Button, SelectInput, RangeSlider
+# Import xarray: I added the following packages to my tethys environment:
+# conda install -c conda-forge pyhdf nco cdo rasterio xarray gdal
+#
+import xarray as xr
 
 @login_required()
 def home(request):
@@ -90,9 +94,30 @@ def home(request):
 
 
 def getTimeSeriesPoint(request):
+    '''
+    This function takes in the request for a timeseries of data at a specific point (i.e. marker)
+    and returns a Json of x,y values that can be used for plotting. 
+    '''
     lat = request.GET['lat'].strip('"')
     lon = request.GET['lon'].strip('"')
-    return JsonResponse({'lat': lat, 'lon': lon})
+    varName = request.GET['layer'].strip('"') # We need the variable to extract from the data file.
+    tdsUrl = request.GET['dataUrl'].strip('"')
+
+    # Use xarray to pull out the data. This means we also need to get the OpenDAP URL
+    # Open the dataset at tdsUrl
+    ds=xr.open_dataset(tdsUrl)
+    lat=float(lat)
+    lon=float(lon)
+    timeSeries=ds[varName].sel(latitude=lat,longitude=lon,method='nearest')
+    # timeSeries is an xarray dataArray object.
+    # The values are a numpy array! It can't be serialized as needed for the JSON Response. 
+    # Convert the values to a list
+    yvals=timeSeries.values.tolist()
+    # The TDS data has times that need to be converted into an array of strings.
+    xvals=timeSeries['time'].dt.strftime('%Y-%m-%dT%H:%M:%S').values.tolist() 
+    #print(xvals)
+    #print(yvals)   
+    return JsonResponse({'x': xvals, 'y': yvals})
 
 
 

@@ -1,5 +1,7 @@
 /* Drawing/Layer Controls */
 
+let chartdata = null; // initialize as a global variable.
+
 let drawnItems = new L.FeatureGroup().addTo(mapObj);   // FeatureGroup is to store editable layers
 
 let drawControl = new L.Control.Draw({
@@ -30,20 +32,22 @@ mapObj.on("draw:drawstart ", function () {     // control what happens when the 
 mapObj.on(L.Draw.Event.CREATED, function (event) {
     drawnItems.addLayer(event.layer);
     L.Draw.Event.STOP;
-    /*
-    // I think the below probably creates the flow needed to create a pop-up time-series plot
-     $("#chart_modal").modal("show");
-    getDrawnChart(drawnItems);
-    */ 
     // If a user selects a location, box, or other polygon, I think I would like a pop-up window to 
     // ask if the users want to download the data or request a timeseries of some metric (e.g. average, max, min, stdev, etc.)
     // For this demonstration, I think it would be good to just assume timeseries requests.
     var type  = event.layerType;
     var layer = event.layer;
-    getTimeSeriesPoint(type,layer)
+    /* Bring up the modal chart */
+    $("#chart").html('<div class="load"><img src="https://media.giphy.com/media/jAYUbVXgESSti/giphy.gif"></div>');
+    $("#chart_modal").modal("show");    
+    getTimeSeriesPoint(type,layer);
 });
 
 function getTimeSeriesPoint(type,layer) {
+    // Define the THREDDS Data Server URL to pass.
+    var tdsUrl='https://thredds.servirglobal.net/thredds/dodsC/climateserv/ucsb-chirps-gefs/global/0.05deg/10dy/ucsb-chirps-gefs.daily.2020.nc4'
+    // Get the layer/variable we need to extract.
+    layer_name=$('#variables').val()
     if (type === 'marker') {
         var coord = layer.getLatLng();
         var lat = coord.lat;
@@ -54,16 +58,17 @@ function getTimeSeriesPoint(type,layer) {
             data: {
                 'lat': lng,
                 'lon': lat,
-                //'filename': pathToDisplayedFile,
-                //'layer': layer_name,
+                'dataUrl': tdsUrl,
+                'layer': layer_name,
             },
             dataType: 'json',
             contentType: "application/json",
             method: 'GET',
             success: function (result) {
-                alert(result['lat'])
-                alert(result['lon'])
-                //draw_graph(result['data'], result['time'], result['value']);
+                // clear the loading gif
+                $("#chart").html('');
+                chartdata = result
+                plotlyTimeseries(chartdata);
             },
         });
     }
@@ -96,6 +101,55 @@ function getTimeSeriesPoint(type,layer) {
         });
     }
 }
+
+function plotlyTimeseries(data) {
+    let variable = $("#variables option:selected").text();
+    let layout = {
+        title: 'Timeseries of 10-Day ' + variable,  // would be great to use the nice name  ... is that what option:selected does?
+        xaxis: {title: 'Time'},
+        yaxis: {title: 'Amount (mm)'} // we could make this dynamic by passing in the units read-in from python through the JSON Request (i.e. an additioanl element)
+    };
+
+    let values = {
+        x: data.x,
+        y: data.y,
+        mode: 'lines+markers',
+        type: 'scatter'
+    };
+    Plotly.newPlot('chart', [values], layout);
+    let chart = $("#chart");
+    chart.css('height', 500);
+    Plotly.Plots.resize(chart[0]);
+}
+
+// Add function to save chart to CSV
+
+function chartToCSV() {
+    function zip(arrays) {
+        return arrays[0].map(function (_, i) {
+            return arrays.map(function (array) {
+                return array[i]
+            })
+        });
+    }
+    if (chartdata === null) {
+        alert('There is no data in the chart. Please plot some data first.');
+        return
+    }
+    let data = zip([chartdata.x, chartdata.y]);
+    let csv = "data:text/csv;charset=utf-8," + data.map(e => e.join(",")).join("\n");
+    let link = document.createElement('a');
+    link.setAttribute('href', encodeURI(csv));
+    link.setAttribute('target', '_blank');
+    link.setAttribute('download', 'extracted_time_series.csv');
+    document.body.appendChild(link);
+    link.click();
+    $("#a").remove()
+}
+
+// WHEN YOU CLICK ON THE DOWNLOAD BUTTON- RUN THE DOWNLOAD CSV FUNCTION
+$("#chartCSV").click(function () {chartToCSV()});
+
 
 //////////////////////////////////////////////////////////////////////////////
  

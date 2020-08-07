@@ -20,6 +20,7 @@ function map() {
     minZoom: 2,
     zoomSnap: .5,
     boxZoom: true,
+    fullscreenControl: true,
     maxBounds: L.latLngBounds(L.latLng(-100.0, -270.0), L.latLng(100.0, 270.0)),
     timeDimension: true,
     timeDimensionControl: true,
